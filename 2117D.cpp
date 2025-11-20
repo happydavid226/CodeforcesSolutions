@@ -1,36 +1,51 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <cstdint>
+#include <cassert>
+#define pii pair<int,int>
+#define vi vector<int>
+#define vb vector<bool> 
+#define ll long long
+#define ull unsigned long long
+#define rep(i, a, n) for(int i = (a); i < (n); i++)
+#define rop(i, n , a) for(int i = (n); i >= (a); i--)
 using namespace std;
 
 void solve(){
-	int n, mi;
+    int n;
 	cin >> n;
-	vector<int> a(n);
+	vi a(n+1); rep(i, 0, n) cin >> a[i+1];
 
-	for(int i = 0; i < n; i++){
-		cin >> a[i];
-		if(i == 0) mi = a[i];
-		else mi = min(mi, a[i]);
+	int diff = a[2] - a[1];
+	int numerator = a[1] + (n * diff);
+	int denominator = n + 1;
+	assert(denominator != 0);
+
+	if((numerator % denominator) != 0){ cout << "no\n"; return; }
+	int x = numerator / denominator;
+
+	numerator = a[1] - diff;
+	if((numerator % denominator) != 0) {cout << "no\n"; return; }
+
+	int y = numerator / denominator;
+	if(x < 0 || y < 0){
+		cout << "no\n"; return;
 	}
-
-	int diff = a[0] - a[1];
-	for(int i = 1; i < n - 1; i++){
-		if(a[i] - a[i+1] != diff){
-			cout << "NO\n";
-			return;
+	rep(i, 1, n+1){
+		if(a[i] != ((x * i) + (y * (n-i+1)))){
+			cout << "no\n"; return;
 		}
 	}
-
-	if(abs(diff) > mi){
-		cout << "NO\n";
-		return;
-	}
-	cout << "YES\n";
+	cout << "yes\n";
 }
 
-int main(){
-	ios_base::sync_with_stdio(false);
-	cin.tie(nullptr);
+int32_t main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-	int tt; cin >> tt; while(tt--) solve(); return 0;
-	return 0;
+    int tt = 1; 
+    cin >> tt; 
+    while(tt--) solve();
+    return 0;
 }
+	

@@ -1,90 +1,87 @@
-#include <bits/stdc++.h>
-
+#include <iostream>
+#include <vector>
+#include <cstdint>
 #define int long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define vb vector<bool> 
+#define ll long long
+#define ull unsigned long long
+#define mod 998244353LL
+#define rep(i, a, n) for(int i = (a); i < (n); i++)
+#define rop(i, n , a) for(int i = (n); i >= (a); i--)
 using namespace std;
 
-const int mod = 998244353;
-
-int power(int j){
+int power(int i){
     int ans = 1LL;
     int base = 2LL;
-    while(j > 0){
-        if(j & 1) ans = (ans * base) % mod;
+    while(i > 0){
+        if(i&1) ans = (ans * base) % mod;
+        i >>= 1;
         base = (base * base) % mod;
-        j >>= 1;
     }
     return ans;
 }
-vector<int> powers;
-
+ 
 void solve(){
     int n;
     cin >> n;
-    vector<int> p(n), q(n), pm(n), qm(n), r(n), pp(n), qp(n);
-
-    int posp, posq;
-    for(int i = 0; i < n; i++){
+    vi p(n), q(n), mxp(n), mxq(n), r(n);
+    int mx_number = 0;
+    rep(i, 0, n){
         cin >> p[i];
         if(i == 0){
-            pm[i] = p[i];
-            pp[i] = i;
-            posp = i;
+            mx_number = p[i];
+            mxp[i] = 0;
         } else {
-            if(p[i] > pm[i-1]){
-                pm[i] =  p[i];
-                posp = i;
+            if(p[i] > mx_number){
+                mxp[i] = i;
+                mx_number = p[i];
             } else {
-                pm[i] = pm[i-1];
+                mxp[i] = mxp[i-1];
             }
         }
-        pp[i] = posp;
     }
-    for(int i = 0; i < n;i++){
+    rep(i, 0, n){
         cin >> q[i];
         if(i == 0){
-            qm[i] = q[i];
-            qp[i] = i;
-            posq = i;
+            mx_number = q[i];
+            mxq[i] = 0;
         } else {
-            if(q[i] > qm[i-1]){
-                qm[i] = q[i];
-                posq = i;
+            if(q[i] > mx_number){
+                mxq[i] = i;
+                mx_number = q[i];
             } else {
-                qm[i] = qm[i-1];
+                mxq[i] = mxq[i-1];
             }
-        }
-        qp[i] = posq;
-        if(pm[i] == qm[i]){
-            int j = pp[i];
-            int ans1 = (powers[p[j]] + powers[q[i-j]]) % mod;
-            j = qp[i];
-            int ans2 = (powers[p[i-j]] + powers[q[j]]) % mod;
-            r[i] = max(ans1, ans2);
-        }
-        else if(pm[i] > qm[i]){
-            int j = pp[i];
-
-            r[i] = (powers[p[j]] + powers[q[i-j]]) % mod;
-        } else {
-            int j = qp[i];
-            r[i] = (powers[p[i-j]] + powers[q[j]]) % mod;
         }
     }
     
-    for(auto x : r ){
-        cout << x << ' ';
-    } cout << '\n';
-    
+    rep(i, 0, n){
+        if(p[mxp[i]] == q[mxq[i]]){
+            if(q[i-mxp[i]] > p[i-mxq[i]]){
+                r[i] = (power(p[mxp[i]]) + power(q[i-mxp[i]])) % mod;
+            } else {
+                r[i] = (power(q[mxq[i]]) + power(p[i-mxq[i]])) % mod;
+            }
+        } else if (p[mxp[i]] > q[mxq[i]]){
+            r[i] = (power(p[mxp[i]]) + power(q[i-mxp[i]])) % mod;
+        } else {
+            r[i] = (power(q[mxq[i]]) + power(p[i-mxq[i]])) % mod;
+        }
+    }
+    rep(i, 0, n){
+        cout << r[i] << ' ';
+    }
+    cout << '\n';
 }
-
+ 
 int32_t main(){
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    powers.resize(100002);
-    for(int i = 0; i < powers.size(); i++){
-        powers[i] = power(i);
-    }
-
-    int tt; cin >> tt; while(tt--) solve();
+ 
+    int tt = 1; 
+    cin >> tt; 
+    while(tt--) solve();
     return 0;
 }

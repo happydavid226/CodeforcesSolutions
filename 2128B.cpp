@@ -115,7 +115,7 @@ void solve(){
     s2[1] = 'L';
 
     if(prev < curr) state = true;
-    i = 2;
+    i = 2;2
     while(!d2.empty()){
         if(state){
             if(d2.front() > curr){
